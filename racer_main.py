@@ -12,7 +12,7 @@ green = (0, 255, 0)
 blue = (0, 0, 255)
 #colors are measured in RGB
 
-car_width = 193
+car_width = 130
 
 pygame.init()
 game_display = pygame.display.set_mode((display_width, display_height))
@@ -34,7 +34,7 @@ def message_display(string):
     text_box.center = (display_width/2, display_height/2)
     game_display.blit(text_surface, text_box)
     pygame.display.update()
-    time.sleep(5)
+    time.sleep(2)
 
     game_loop()
     #restarts game
@@ -84,9 +84,9 @@ def game_loop():
 
         x += x_change            
 
-        game_display.fill(white)
+        game_display.fill(blue)
 
-        obstacles(obx, oby, obw, obh, blue)
+        obstacles(obx, oby, obw, obh, white)
         oby += ob_speed
         car(x, y)
 
@@ -95,6 +95,10 @@ def game_loop():
         if oby > display_height:
             oby = 0 - obh
             obx = random.randrange(0, display_width)
+
+        if y + 32 < oby + obh:
+            if x + 70 > obx and x + 70 < obx + obw or x + car_width > obx and x + car_width < obx + obw:
+                crash()
         
         pygame.display.update()
         #could also use pygame.display.flip, which updates the whole surface
