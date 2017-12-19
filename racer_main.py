@@ -1,5 +1,6 @@
 import pygame
 import time
+import random
 
 display_width = 800
 display_height = 600
@@ -19,6 +20,10 @@ pygame.display.set_caption('Racers')
 clock = pygame.time.Clock()
 
 car_img = pygame.image.load('starter_car.png')
+
+def obstacles(obx, oby, obw, obh, color):
+    pygame.draw.rect(game_display, color, [obx, oby, obw, obh])
+    
 
 def crash():
     message_display('You crashed!')
@@ -51,6 +56,12 @@ def game_loop():
 
     x_change = 0
 
+    obx = random.randrange(0, display_width)
+    oby = -800
+    ob_speed = 8
+    obw = 100
+    obh = 100
+
     exit_status = False
 
     while not exit_status:
@@ -73,11 +84,17 @@ def game_loop():
 
         x += x_change            
 
-        game_display.fill(white)      
+        game_display.fill(white)
+
+        obstacles(obx, oby, obw, obh, blue)
+        oby += ob_speed
         car(x, y)
 
         if x > display_width - car_width or x < 0:
             crash()
+        if oby > display_height:
+            oby = 0 - obh
+            obx = random.randrange(0, display_width)
         
         pygame.display.update()
         #could also use pygame.display.flip, which updates the whole surface
