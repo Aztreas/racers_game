@@ -1,4 +1,5 @@
 import pygame
+import time
 
 display_width = 800
 display_height = 600
@@ -19,6 +20,26 @@ clock = pygame.time.Clock()
 
 car_img = pygame.image.load('starter_car.png')
 
+def crash():
+    message_display('You crashed!')
+
+def message_display(string):
+    font = pygame.font.Font('freesansbold.ttf', 115)
+    text_surface, text_box = text_objects(string, font, red)
+    text_box.center = (display_width/2, display_height/2)
+    game_display.blit(text_surface, text_box)
+    pygame.display.update()
+    time.sleep(5)
+
+    game_loop()
+    #restarts game
+
+def text_objects(string, font, color):
+    text_surface = font.render(string, True, color)
+    return text_surface, text_surface.get_rect()
+    
+    
+
 def car(x, y):
     game_display.blit(car_img, (x, y))
 
@@ -30,15 +51,15 @@ def game_loop():
 
     x_change = 0
 
-    crashed = False
-
     exit_status = False
 
-    while not crashed and not exit_status:
+    while not exit_status:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit_status = True
+                pygame.quit()
+                quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     x_change = -5
@@ -56,7 +77,7 @@ def game_loop():
         car(x, y)
 
         if x > display_width - car_width or x < 0:
-            crashed = True
+            crash()
         
         pygame.display.update()
         #could also use pygame.display.flip, which updates the whole surface
