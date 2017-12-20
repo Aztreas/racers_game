@@ -2,17 +2,26 @@ import pygame
 import time
 import random
 
+class Background(pygame.sprite.Sprite):
+    def __init__(self, image_file, location):
+        pygame.sprite.Sprite.__init__(self)  #call Sprite initializer
+        self.image = pygame.image.load(image_file)
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.top = location
+
 display_width = 800
 display_height = 600
 
 black = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
-green = (0, 255, 0)
+green = (0, 122, 66)
 blue = (0, 0, 255)
 #colors are measured in RGB
 
 car_width = 130
+
+background_road = Background('Road.png', [210,0])
 
 pygame.init()
 game_display = pygame.display.set_mode((display_width, display_height))
@@ -84,7 +93,8 @@ def game_loop():
 
         x += x_change            
 
-        game_display.fill(blue)
+        game_display.fill(green)
+        game_display.blit(background_road.image, background_road.rect)
 
         obstacles(obx, oby, obw, obh, white)
         oby += ob_speed
