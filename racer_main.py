@@ -11,6 +11,7 @@ class Background(pygame.sprite.Sprite):
 
 display_width = 800
 display_height = 600
+high_score = 0
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -34,11 +35,14 @@ def obstacles(obx, oby, obw, obh, color):
     pygame.draw.rect(game_display, color, [obx, oby, obw, obh])
     
 
-def crash():
-    message_display('You crashed!')
+def crash(end_score):
+    global high_score
+    if end_score > high_score:
+        high_score = end_score
+    message_display('You crashed! High score: ' + str(high_score))
 
 def message_display(string):
-    font = pygame.font.Font('freesansbold.ttf', 115)
+    font = pygame.font.Font('freesansbold.ttf', 45)
     text_surface, text_box = text_objects(string, font, red)
     text_box.center = (display_width/2, display_height/2)
     game_display.blit(text_surface, text_box)
@@ -58,6 +62,8 @@ def car(x, y):
     game_display.blit(car_img, (x, y))
 
 def game_loop():
+
+    score = 0
 
     x = (display_width * .4)
     y = (display_height * .75)
@@ -91,7 +97,8 @@ def game_loop():
                     x_change = 0
 
 
-        x += x_change            
+        x += x_change
+        score += 1
 
         game_display.fill(green)
         game_display.blit(background_road.image, background_road.rect)
@@ -108,7 +115,7 @@ def game_loop():
 
         if y + 32 < oby + obh:
             if x + 70 > obx and x + 70 < obx + obw or x + car_width > obx and x + car_width < obx + obw:
-                crash()
+                crash(score)
         
         pygame.display.update()
         #could also use pygame.display.flip, which updates the whole surface
